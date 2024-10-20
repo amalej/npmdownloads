@@ -43,7 +43,7 @@ export function groupNpmDownloadsPerWeek(
 }
 
 export function getRandomRgb() {
-  const rand = () => 75 + Math.floor(Math.random() * 186);
+  const rand = () => 75 + Math.floor(Math.random() * 156);
   const rgb = `rgb(${rand()},${rand()},${rand()})`;
   return rgb;
 }

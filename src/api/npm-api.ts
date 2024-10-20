@@ -56,3 +56,44 @@ export async function searchPackageNames(
   }
   return packageNameArray;
 }
+
+export interface PackageData {
+  npm: NpmPackageData;
+}
+
+export interface NpmPackageData {
+  _id: string;
+  name: string;
+  "dist-tags": {
+    latest: string;
+  };
+  time: {
+    [key: string]: string;
+  };
+  homepage: string;
+  repository: {
+    url: string;
+    type: string;
+  };
+}
+
+export async function getPackageData(
+  packageName: string
+): Promise<PackageData> {
+  const npmRes = await fetch(`https://registry.npmjs.org/${packageName}`);
+  const npmResText = await npmRes.text();
+  const npmResTextObj = JSON.parse(npmResText);
+
+  const packageData = {
+    npm: {
+      _id: npmResTextObj._id,
+      name: npmResTextObj.name,
+      "dist-tags": npmResTextObj["dist-tags"],
+      time: npmResTextObj.time,
+      homepage: npmResTextObj.homepage,
+      repository: npmResTextObj.repository,
+    },
+  };
+
+  return packageData;
+}
