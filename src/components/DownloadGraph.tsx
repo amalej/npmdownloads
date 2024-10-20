@@ -11,7 +11,11 @@ import {
   ChartDataset,
 } from "chart.js";
 import { TPackageDownloadData, GroupDownloadsValue } from "../types";
-import { groupNpmDownloadsPerWeek, createRgbaFromRgb } from "../utils";
+import {
+  groupNpmDownloadsPerWeek,
+  createRgbaFromRgb,
+  formatYyyyMmDdToDate,
+} from "../utils";
 
 Chart.register(Filler);
 Chart.register(CategoryScale);
@@ -34,7 +38,7 @@ interface DownloadGraphProps {
 
 const GRAPH_DATASET_STYLE: Omit<ChartDataset<"line">, "data"> = {
   pointStyle: "circle",
-  // pointRadius: 3.5,
+  pointRadius: 0,
   pointHoverRadius: 5,
 };
 
@@ -54,7 +58,9 @@ export default function DownloadGraph(props: DownloadGraphProps) {
             downloadData.downloads
           )) {
             if (_npmDownloadChartData.labels.length === 0) {
-              const label = `${downloads.start} to ${downloads.end}`;
+              const label = `${formatYyyyMmDdToDate(
+                downloads.start
+              )} to ${formatYyyyMmDdToDate(downloads.end)}`;
               labels.push(label);
             }
             datas.push(downloads.downloads);
@@ -78,7 +84,7 @@ export default function DownloadGraph(props: DownloadGraphProps) {
         label: downloadData.package,
         data: datas,
         borderColor: downloadData.color,
-        backgroundColor: createRgbaFromRgb(downloadData.color, 0.125),
+        backgroundColor: createRgbaFromRgb(downloadData.color, 0.25),
         fill: props.isGraphFillChecked,
         ...GRAPH_DATASET_STYLE,
       });
@@ -89,7 +95,7 @@ export default function DownloadGraph(props: DownloadGraphProps) {
   return (
     <Line
       style={{
-        padding: "2em",
+        padding: "1em",
       }}
       options={{
         interaction: {
@@ -103,7 +109,7 @@ export default function DownloadGraph(props: DownloadGraphProps) {
           y: {
             ticks: {
               font: {
-                size: 16,
+                size: 14,
               },
             },
             beginAtZero: true,
@@ -119,7 +125,7 @@ export default function DownloadGraph(props: DownloadGraphProps) {
             position: "top" as const,
             labels: {
               font: {
-                size: 16,
+                size: 14,
                 family: "Verdana, sans-serif",
                 weight: "lighter",
               },
@@ -132,7 +138,7 @@ export default function DownloadGraph(props: DownloadGraphProps) {
               size: 16,
             },
             titleFont: {
-              size: 18,
+              size: 16,
             },
           },
         },
