@@ -2,6 +2,8 @@
 
 A site to get metrics on the number of downloads for an NPM library. Visit the site at https://npmdownloads.web.app
 
+<img src="images/web-app.png"/>
+
 ## Queries
 
 | Name                | Value               | Kind      | Notes                           |
