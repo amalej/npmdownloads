@@ -114,6 +114,7 @@ export default function DownloadGraph(props: DownloadGraphProps) {
       }}
       options={{
         responsive: true,
+        maintainAspectRatio: false,
         devicePixelRatio: 1,
         interaction: {
           intersect: false,
