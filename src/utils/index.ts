@@ -48,11 +48,25 @@ export function getRandomRgb() {
   return rgb;
 }
 
-export function createRgbaFromRgb(rgb: string, alpha: number) {
+export function getPastelColor() {
+  const randomInt = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+  var h = randomInt(0, 360);
+  var s = randomInt(42, 98);
+  // var l = randomInt(40, 90);
+  var l = randomInt(40, 80);
+  return `hsl(${h},${s}%,${l}%)`;
+}
+
+export function createOpaqueColor(rgb: string, alpha: number) {
   if (alpha > 1 || alpha < 0) {
     throw Error("Value of alhpa is out of range. Valid range is 0 - 1.0");
   }
-  return rgb.replace("rgb", "rgba").replace(")", `, ${alpha})`);
+  return rgb
+    .replace("rgb", "rgba")
+    .replace("hsl", "hsla")
+    .replace(")", `, ${alpha})`);
 }
 
 export function formatYyyyMmDdToDate(yyyymmdd: string) {
@@ -73,4 +87,8 @@ export function formatYyyyMmDdToDate(yyyymmdd: string) {
   ];
 
   return `${months[parseInt(mm) - 1]}-${dd}-${yyyy}`;
+}
+
+export function formatNumberToCurrency(number: number) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
