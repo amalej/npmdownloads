@@ -13,7 +13,7 @@ import {
 import { TPackageDownloadData, GroupDownloadsValue } from "../types";
 import {
   groupNpmDownloadsPerWeek,
-  createRgbaFromRgb,
+  createOpaqueColor,
   formatYyyyMmDdToDate,
 } from "../utils";
 
@@ -24,7 +24,6 @@ Chart.register(PointElement);
 Chart.register(LineElement);
 Chart.register(Legend);
 Chart.register(Tooltip);
-
 interface NpmPackageChartData {
   labels: Array<string>;
   datasets: ChartDataset<"line">[];
@@ -39,7 +38,8 @@ interface DownloadGraphProps {
 const GRAPH_DATASET_STYLE: Omit<ChartDataset<"line">, "data"> = {
   pointStyle: "circle",
   pointRadius: 0,
-  pointHoverRadius: 5,
+  pointHoverRadius: 6,
+  borderWidth: 3.5,
 };
 
 export default function DownloadGraph(props: DownloadGraphProps) {
@@ -84,12 +84,27 @@ export default function DownloadGraph(props: DownloadGraphProps) {
         label: downloadData.package,
         data: datas,
         borderColor: downloadData.color,
-        backgroundColor: createRgbaFromRgb(downloadData.color, 0.25),
+        backgroundColor: createOpaqueColor(downloadData.color, 0.2),
         fill: props.isGraphFillChecked,
         ...GRAPH_DATASET_STYLE,
       });
     }
     return _npmDownloadChartData;
+  };
+
+  const legendMargin = {
+    id: "legendMargin",
+    afterInit(chart: any, args: any, plugins: any) {
+      console.log(chart.legend.fit);
+      const originalFit = chart.legend.fit;
+      const margin = plugins.margin;
+      chart.legend.fit = function fit() {
+        if (originalFit) {
+          originalFit.call(this);
+        }
+        return (this.height += margin);
+      };
+    },
   };
 
   return (
@@ -98,6 +113,8 @@ export default function DownloadGraph(props: DownloadGraphProps) {
         padding: "1em",
       }}
       options={{
+        responsive: true,
+        devicePixelRatio: 1,
         interaction: {
           intersect: false,
           mode: "index",
@@ -131,6 +148,10 @@ export default function DownloadGraph(props: DownloadGraphProps) {
               },
             },
           },
+          // @ts-ignore
+          legendMargin: {
+            margin: 25,
+          },
           tooltip: {
             mode: "index",
             intersect: false,
@@ -140,10 +161,13 @@ export default function DownloadGraph(props: DownloadGraphProps) {
             titleFont: {
               size: 16,
             },
+            boxPadding: 6,
+            bodySpacing: 6,
           },
         },
       }}
       data={{ ...getChartData() }}
+      plugins={[legendMargin]}
     ></Line>
   );
 }
