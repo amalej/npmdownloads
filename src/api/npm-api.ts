@@ -97,3 +97,39 @@ export async function getPackageData(
 
   return packageData;
 }
+
+export interface MinimalPackageInfo {
+  packageName: string;
+  description: string;
+  version: string;
+  links: {
+    npm: string;
+    homepage: string;
+    repository: string;
+  };
+}
+
+export async function getMinimalPacakgeInfo(
+  packageName: string
+): Promise<MinimalPackageInfo> {
+  // fetching using the search endpoint is not ideal, but it returns a smaller payload.
+  const res = await fetch(
+    `https://registry.npmjs.org/-/v1/search?text=${packageName}&size=1`
+  );
+
+  const text = await res.text();
+  const packageInfo = JSON.parse(text)["objects"][0];
+
+  await new Promise((res, rej) => setTimeout(res, 5999));
+
+  return {
+    packageName: packageInfo.package.name,
+    description: packageInfo.package.description,
+    version: packageInfo.package.version,
+    links: {
+      npm: packageInfo.package.links.npm,
+      homepage: packageInfo.package.links.homepage,
+      repository: packageInfo.package.links.repository,
+    },
+  };
+}
