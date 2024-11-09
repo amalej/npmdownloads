@@ -20,11 +20,12 @@ import {
   PackageDownloadData,
   searchPackageNames,
 } from "./api/npm-api";
-import { getRandomRgb } from "./utils";
+import { getPastelColor, getRandomRgb } from "./utils";
 import { useDidMountEffect } from "./custom-hooks";
 import dayjs from "dayjs";
 import { GroupDownloadsValue, TPackageDownloadData } from "./types";
 import DownloadGraph from "./components/DownloadGraph";
+import PackageInfoCards from "./components/PackageInfoCards";
 
 const TYPING_SEARCH_BUFFER = 1000;
 
@@ -130,7 +131,7 @@ function App() {
       for (let downloadData of allRes) {
         _npmDownloadData.push({
           ...downloadData,
-          color: getRandomRgb(),
+          color: getPastelColor(),
         });
       }
       setNpmDownloadData(_npmDownloadData);
@@ -259,7 +260,7 @@ function App() {
               <FormControlLabel
                 control={
                   <Checkbox
-                    value={isGraphFillChecked}
+                    checked={isGraphFillChecked}
                     onChange={() => setIsGraphFillChecked(!isGraphFillChecked)}
                     size="small"
                   />
@@ -270,12 +271,23 @@ function App() {
           </Grid2>
         </Grid2>
       </LocalizationProvider>
-      <DownloadGraph
-        key="download-graph"
-        npmDownloadData={npmDownloadData}
-        isGraphFillChecked={isGraphFillChecked}
-        groupDownloadsBy={groupDownloadsBy}
-      ></DownloadGraph>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "640px",
+          maxHeight: "640px",
+        }}
+      >
+        <DownloadGraph
+          key="download-graph"
+          npmDownloadData={npmDownloadData}
+          isGraphFillChecked={isGraphFillChecked}
+          groupDownloadsBy={groupDownloadsBy}
+        ></DownloadGraph>
+      </div>
+      <PackageInfoCards npmDownloadData={npmDownloadData} />
     </div>
   );
 }
