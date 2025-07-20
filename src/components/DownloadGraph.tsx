@@ -95,7 +95,6 @@ export default function DownloadGraph(props: DownloadGraphProps) {
   const legendMargin = {
     id: "legendMargin",
     afterInit(chart: any, args: any, plugins: any) {
-      console.log(chart.legend.fit);
       const originalFit = chart.legend.fit;
       const margin = plugins.margin;
       chart.legend.fit = function fit() {

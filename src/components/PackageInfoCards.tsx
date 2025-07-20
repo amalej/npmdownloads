@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import { FaNpm } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
-import { PiDownloadSimple } from "react-icons/pi";
 import WebIcon from "@mui/icons-material/Web";
 import { useEffect, useState } from "react";
 import { getMinimalPacakgeInfo, MinimalPackageInfo } from "../api/npm-api";
@@ -36,12 +35,15 @@ function CustomNpmPackageInfoCard(props: {
     loadPackageInfo();
   }, []);
 
+  function cleanRepositoryUrl(url: string) {
+    return url.replace(/^(.*?)(?=https:\/\/|$)/gm, "");
+  }
+
   return (
     <Card
       sx={{
         display: "flex",
         flexDirection: "column",
-        // border: "1px solid #00000011",
         border: `2.5px solid ${props.downloadData.color}`,
         width: "288px",
       }}
@@ -130,7 +132,10 @@ function CustomNpmPackageInfoCard(props: {
               aria-label="delete"
               style={{ fontSize: "2.25em" }}
               onClick={() => {
-                window.open(packageInfo.links.repository, "_blank");
+                window.open(
+                  cleanRepositoryUrl(packageInfo.links.repository),
+                  "_blank"
+                );
               }}
             >
               <FaGithub fontSize="inherit" />
