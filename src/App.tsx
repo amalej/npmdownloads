@@ -139,6 +139,7 @@ function App() {
   }
 
   async function searchPackageName(packageName: string) {
+    if (packageName.length === 0) return
     setNpmPackageNames([...selectedNpmPackages]);
     const packageNames = await searchPackageNames(packageName);
     const filteredPackageNames = packageNames.filter(
